@@ -1,0 +1,37 @@
+(define (domain PickandPlaceDomain)
+    (:requirements :negative-preconditions)
+(:predicates (ROOM ?x) (BALL ?x ?x2) (GRIPPER ?x ?y) (BALL1 ?x) (GRIPPER1 ?z)
+  (at-robby ?x) (at-ball ?x ?y)
+  (free ?x) (carry ?x ?y) (check-balls ?x1))
+
+(:action move :parameters (?x ?y)
+    :precondition (and (ROOM ?x) (ROOM ?y)
+                    (at-robby ?x))
+    :effect (and (at-robby ?y)
+    (not (at-robby ?x))))
+
+(:action pick-up :parameters (?x ?x2 ?y ?l ?r)
+    :precondition (and (BALL ?x ?x2) (ROOM ?y) (GRIPPER ?l ?r)
+    (at-ball ?x ?y) (at-ball ?x2 ?y) (at-robby ?y) (free ?l) (free ?r))
+    :effect (and (carry ?l ?x) (carry ?r ?x2)
+    (not (at-ball ?x ?y)) (not (free ?l)) (not (at-ball ?x2 ?y)) (not (free ?r))))
+
+(:action drop :parameters (?x ?x2 ?y ?l ?r)
+    :precondition (and (BALL ?x ?x2) (ROOM ?y) (GRIPPER ?l ?r)
+    (carry ?l ?x) (carry ?r ?x2) (at-robby ?y))
+    :effect (and (at-ball ?x ?y) (free ?l)
+    (not (carry ?l ?x2))  (at-ball ?x2 ?y) (free ?r) (not (carry ?r ?x2))))
+
+(:action pick-up1 :parameters (?x ?y ?z)
+    :precondition (and (BALL1 ?x) (ROOM ?y) (GRIPPER1 ?z)
+    (at-ball ?x ?y) (at-robby ?y) (free ?z) )
+    :effect (and (carry ?z ?x) 
+    (not (at-ball ?x ?y)) (not (free ?z)) ))
+
+(:action drop1 :parameters (?x ?y ?z)
+    :precondition (and (BALL1 ?x) (ROOM ?y) (GRIPPER1 ?z)
+    (carry ?z ?x) (at-robby ?y))
+    :effect (and (at-ball ?x ?y) (free ?z)
+    (not (carry ?z ?x))))
+
+)
